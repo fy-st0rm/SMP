@@ -26,10 +26,11 @@ static void init_songs()
 {
 	song_url = new_dict();
 	queue = new_dict();
-	dict_append(song_url, "anson", "https://www.youtube.com/watch?v=VVkVGczOXWA");
-	dict_append(song_url, "anson2", "https://www.youtube.com/playlist?list=PLukGxamtDUYEAAo3zuYzHjmismnDhSTe2");
-	dict_append(song_url, "charles", "https://www.youtube.com/watch?v=hVRELkq5-7Y");
-	dict_append(song_url, "kane", "https://www.youtube.com/watch?v=Nh5XZzk5HH4");
+	dict_append(song_url, "anson", "https://www.youtube.com/playlist?list=PLukGxamtDUYEAAo3zuYzHjmismnDhSTe2");
+	dict_append(song_url, "hayd", "https://www.youtube.com/playlist?list=PLukGxamtDUYGndSU06x1dQClgPk8kIErT");
+	dict_append(song_url, "yaeow", "https://www.youtube.com/playlist?list=PLukGxamtDUYEsS7xxW9rYqmi02IeRZuGH");
+	dict_append(song_url, "zevia", "https://www.youtube.com/playlist?list=PLukGxamtDUYGLCRSKCm-rl-h9X4DLYTxF");
+	dict_append(song_url, "mix", "https://www.youtube.com/playlist?list=PLukGxamtDUYG3iH3f5Mwnx4ZoxqYJhKI-");
 }
 
 
