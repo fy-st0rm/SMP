@@ -95,7 +95,7 @@ void quit()
 void extract_url(const char* key)
 {
 	char* url = dict_get(song_url, key);
-	char* cmd = "python src/smpd.py -l ";		//TODO: change python src/smpd to smpd
+	char* cmd = "python /usr/bin/smpd.py -l ";
 	
 	// Creating the full cmd
 	int cmd_size = strlen(cmd) + strlen(url) + 1;

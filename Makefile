@@ -24,7 +24,9 @@ install:
 	$(MAKE) build
 	$(MAKE) clean
 	sudo mv $(EXE) /usr/bin
+	sudo cp smpd.py /usr/bin
 
 uninstall:
 	sudo rm /usr/bin/$(EXE)
-
+	sudo rm /usr/bin/smpd.py
+	
