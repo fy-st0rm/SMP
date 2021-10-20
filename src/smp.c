@@ -184,13 +184,12 @@ void* player_daemon()
 
 						if (queue_loop)
 						{
-							char* val = (char*) calloc(1, sizeof(dict_get(queue, keys[0])));
-							strcpy(val, dict_get(queue, keys[0]));
+							char* val = dict_get(queue, keys[0]);
 							dict_append(queue, keys[0], val);
-							dict_pop(queue, keys[0]);
+							dict_pop_i(queue, 0);
 						}
 						else
-							dict_pop(queue, keys[0]);
+							dict_pop_i(queue, 0);
 						
 						render();
 					}
@@ -457,10 +456,16 @@ int main()
 					libvlc_media_player_release(vlc_mp);
 					vlc_mp = NULL;
 					
-					const char* keys[queue->len];
-					dict_get_keys(queue, keys);
-
-					dict_pop(queue, keys[0]);
+					if (queue_loop)
+					{
+						char* keys[queue->len];
+						dict_get_keys(queue, keys);
+						char* val = dict_get(queue, keys[0]);
+						dict_append(queue, keys[0], val);
+						dict_pop_i(queue, 0);
+					}
+					else
+						dict_pop_i(queue, 0);
 				}
 				break;
 			}

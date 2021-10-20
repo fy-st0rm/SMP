@@ -64,10 +64,30 @@ void dict_pop(Dict* dict, const char* key)
 		{
 			new_entries[count].key = dict->entries[i].key;
 			new_entries[count].val = dict->entries[i].val;
+			count++;
+		}
+
+	}
+
+	dict->len--;
+	dict->entries = new_entries;
+}
+
+void dict_pop_i(Dict* dict, int index)
+{
+	dict_entry* new_entries = malloc(sizeof(dict_entry) * (dict->len - 1));
+
+	int count = 0;
+	for (int i = 0; i < dict->len; i++)
+	{
+		if (i != index)
+		{
+			new_entries[count].key = dict->entries[i].key;
+			new_entries[count].val = dict->entries[i].val;
+			count++;
 		}
 	}
 
-	free(dict->entries);
 	dict->len--;
 	dict->entries = new_entries;
 }

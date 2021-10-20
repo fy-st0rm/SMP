@@ -31,6 +31,7 @@ const char* dict_get(Dict* dict, const char* key);
 const char* dict_get_i(Dict* dict, int index);
 void dict_get_keys(Dict* dict, const char** keys);
 void dict_pop(Dict* dict, const char* key);
+void dict_pop_i(Dict* dict, int index);
 void dict_clear(Dict* dict);
 void dict_free(Dict* dict);
 
