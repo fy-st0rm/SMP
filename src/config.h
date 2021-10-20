@@ -29,6 +29,7 @@ static void init_songs()
 	dict_append(song_url, "anson", "https://www.youtube.com/watch?v=VVkVGczOXWA");
 	dict_append(song_url, "anson2", "https://www.youtube.com/playlist?list=PLukGxamtDUYEAAo3zuYzHjmismnDhSTe2");
 	dict_append(song_url, "charles", "https://www.youtube.com/watch?v=hVRELkq5-7Y");
+	dict_append(song_url, "kane", "https://www.youtube.com/watch?v=Nh5XZzk5HH4");
 }
 
 

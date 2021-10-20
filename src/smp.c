@@ -98,8 +98,8 @@ void extract_url(const char* key)
 	char* cmd = "python src/smpd.py -l ";		//TODO: change python src/smpd to smpd
 	
 	// Creating the full cmd
-	int cmd_size = strlen(cmd) + strlen(url);
-	char full_cmd[cmd_size];
+	int cmd_size = strlen(cmd) + strlen(url) + 1;
+	char full_cmd[cmd_size]; //(char*)malloc(sizeof(url) + sizeof(cmd));
 	for (int j = 0; j < cmd_size; j++) full_cmd[j] = '\0';
 	
 	strcat(full_cmd, cmd);
@@ -108,7 +108,7 @@ void extract_url(const char* key)
 	// Reading from stdout	
 	FILE *fp;
 	int status;
-	char output[1035];
+	char output[1048];
 
 	// Open the command for reading. 
 	fp = popen(full_cmd, "r");
@@ -121,15 +121,16 @@ void extract_url(const char* key)
 	int i = 1;
 	while (fgets(output, sizeof(output), fp) != NULL)
 	{
+		sleep(0.1);	// To sync with python program	
 		if (i % 2 != 0)
 		{
-			//printf("%s", output);
+			//printf("%d)- %s\n", i, output);
 			char* title = strtok(output, "]");
 			char* url = strtok(NULL, "]");
 			url = strtok(url, "\n");
-			
-			char* new_title = calloc(strlen(title), sizeof(char*));
-			char* new_url = calloc(strlen(url), sizeof(char*));
+				
+			char* new_title = calloc(strlen(title)+1, sizeof(char*));
+			char* new_url = calloc(strlen(url)+1, sizeof(char*));
 
 			strcpy(new_title, title);
 			strcpy(new_url, url);
@@ -183,14 +184,14 @@ void* player_daemon()
 
 						if (queue_loop)
 						{
-							char* val = dict_get(queue, keys[0]);
-							dict_pop(queue, keys[0]);
+							char* val = (char*) calloc(1, sizeof(dict_get(queue, keys[0])));
+							strcpy(val, dict_get(queue, keys[0]));
 							dict_append(queue, keys[0], val);
+							dict_pop(queue, keys[0]);
 						}
 						else
 							dict_pop(queue, keys[0]);
 						
-
 						render();
 					}
 				
@@ -299,19 +300,25 @@ void render()
 	// Status
 	char status[17];
 	snprintf(status, sizeof(status), "[State: %s]", play ? "Playing" : "Paused");
-	mvaddstr(track_list->h + 4, size.ws_col / 4 - 18 / 2, status);
+	mvaddstr(track_list->h + 4, size.ws_col / 5 - 18 / 2, status);
 	refresh();	
 	
 	// Queue loop
 	char loop[12];
 	snprintf(loop, sizeof(loop), "[Loop: %s]", queue_loop ? "Yes" : "No");
-	mvaddstr(track_list->h + 4, size.ws_col / 2 - 12 / 2, loop);
+	mvaddstr(track_list->h + 4, size.ws_col / 2.5 - 12 / 2, loop);
 	refresh();
 
 	// Volume
 	char volume_percent[14];
 	snprintf(volume_percent, sizeof(volume_percent), "[Volume: %d]", volume);
-	mvaddstr(track_list->h + 4, size.ws_col / 1.3 - 14 / 2, volume_percent);
+	mvaddstr(track_list->h + 4, size.ws_col / 1.7 - 14 / 2, volume_percent);
+	refresh();
+	
+	// Queue total
+	char queue_total[14];
+	snprintf(queue_total, sizeof(queue_total), "[Queue: %d]", queue->len);	
+	mvaddstr(track_list->h + 4, size.ws_col / 1.2 - 14 / 2, queue_total);
 	refresh();
 }
 
@@ -319,6 +326,19 @@ void render()
 /*
  * Main function
  */
+/*
+int main()
+{
+	init_songs();
+
+	extract_url("anson2");
+	extract_url("anson2");
+	
+	printf("%d", queue->len);
+
+	return 0;
+}*/
+
 
 int main()
 {
@@ -344,7 +364,8 @@ int main()
 	dict_get_keys(song_url, items);
 
 	// Main loop
-	while (1)
+	bool main_loop = true;
+	while (main_loop)
 	{
 		// Rendering all the ui
 		render();
@@ -411,12 +432,36 @@ int main()
 				}
 				break;
 			}
+						
+			// 113 == 'q'	[To exit out of the player'
+			case 113:
+			{
+				main_loop = false;
+				break;
+			}
 		
 			// 114 == 'r'	[To reset the queue]
 			case 114:
 			{
 				if (vlc_mp)	libvlc_media_player_pause(vlc_mp);
 				dict_clear(queue);
+				break;
+			}
+			
+			// 115 == 's'	[To skip a song]
+			case 115:
+			{
+				if (play)
+				{
+					libvlc_media_player_stop(vlc_mp);
+					libvlc_media_player_release(vlc_mp);
+					vlc_mp = NULL;
+					
+					const char* keys[queue->len];
+					dict_get_keys(queue, keys);
+
+					dict_pop(queue, keys[0]);
+				}
 				break;
 			}
 

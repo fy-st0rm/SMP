@@ -72,6 +72,7 @@ void fill_list_box(ListBox* list_box, char** items, int size)
 	{
 		char* item = items[i];
 		int len = strlen(item);
+		
 			
 		if (len < list_box->w)
 		{
@@ -86,17 +87,16 @@ void fill_list_box(ListBox* list_box, char** items, int size)
 			{
 				strcat(temp, " ");
 			}
-		
+			
 			item = temp;
 		}
-		else if (len > list_box->w)
+			
+		else if (len >= list_box->w)
 		{
 			// Reducing the sizeof the string when the listbox is small
 			if (list_box->w > 1)
 			{
-				char* temp = malloc(sizeof(char) * (list_box->w - 2));
-				for (int i = 0; i < sizeof(temp); i++) temp[i] = '\0';
-				strncpy(temp, item, list_box->w - 2);
+				char* temp = strndup(item, list_box->w - 2);
 				item = temp;
 			}
 		}

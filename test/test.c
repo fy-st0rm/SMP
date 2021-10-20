@@ -7,10 +7,10 @@
 
 int main()
 {
-	char key = 'r';
+	char key = 'q';
 	printf("%d is %c\n", key, key);
     
-	char key2 = '-';
+	char key2 = 's';
 	printf("%d is %c\n", key2, key2);
 	
 	time_t seconds;
