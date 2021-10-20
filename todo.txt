@@ -1,0 +1,5 @@
+[] fix the resize mem leak
+[] minimize crashes
+[] proper memory management
+[] playing the songs
+[] handle key bindings
